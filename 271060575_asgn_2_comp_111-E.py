@@ -1,10 +1,13 @@
+import pickle
 import random  
+
 class Movie:
-    def __init__(self,movie_title):
-        self.seat_array=["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"]
+    def __init__(self, movie_title):
+        self.seat_array = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"]
         self.movie_list = ["shawshank redemption","the godfather","lord of the rings","angry men","pulp fiction","hotel transylvania","jojo rabbit","life is beautiful","star wars","up","hachi"]
         self.movie_title = movie_title
         self.seat_available = 20
+
     def manage_booking(self):
         print("welcome to the cinema ")
         print("the following movies are available :")
@@ -25,6 +28,7 @@ class Movie:
         else:
             print(f"You did not book a ticket for movie {self.movie_title}")
             print("the seats which you booked have been registered")
+
 class Screen:
     def __init__(self, screen_num):
         self.screen_num = screen_num
@@ -44,8 +48,6 @@ class Screen:
             self.screen_timeslot[screen_name] = timeslot_obj
             print(f"Timeslots assigned to {screen_name}: ")
             timeslot_obj.display_timeslot()
- 
-
 
 class Timeslot:
     def __init__(self, start_time, stop_time):
@@ -83,13 +85,13 @@ class Timeslot:
             print(f"{start} to {stop}")
 
 class Admin:
-    def __init__(self,email,password,movie_title,screen_num,start_time,stop_time):
-        self.timeslot_obj = Timeslot(start_time,stop_time)
+    def __init__(self, email, password, movie_title, screen_num, start_time, stop_time):
+        self.timeslot_obj = Timeslot(start_time, stop_time)
         self.screen_obj = Screen(screen_num)
         self.movie_obj = Movie(movie_title)
         self.email = email
         self.password = password
-        pass
+
     def login(self):
         while True:
             email_check = input("Enter your email to sign in: ")
@@ -116,6 +118,7 @@ class Admin:
             print(f"{self.movie_obj.movie_list}")
         else:
             print("nothing will happen")  
+
     def seating_change(self):
         print("the list of seat is : ")
         print(f"{self.movie_obj.seat_array}")
@@ -131,28 +134,26 @@ class Admin:
             print(f"the seat has been removed . remaining seats are {self.movie_obj.seat_array}")
         else:
             print("seating arrangements remains the same")  
+
     def screen_number_change(self):  
         print(f"{self.screen_obj.screen_number_assign()}")   
+
     def adjusting_timeslot(self):
         print(f"{self.timeslot_obj.add_timeslot()}")  
+
     def removing_new_timeslot(self):
         print(f"{self.timeslot_obj.remove_timeslot()}")  
 
-       
-        pass  
-
-
-
 class booking_detail:
-    def __init__(self, movie_title, screen_num,start_time,stop_time):
+    def __init__(self, movie_title, screen_num, start_time, stop_time):
         self.movie_title = movie_title
         self.obj_movie = Movie(movie_title)
         self.screen_obj = Screen(screen_num)
-        self.timeslot_obj = Timeslot(start_time,stop_time)
+        self.timeslot_obj = Timeslot(start_time, stop_time)
 
     def generate_id(self):
         print(f"Welcome user, your ID for your booking is:")
-        i = random.randint(10000,99999)
+        i = random.randint(10000, 99999)
         print(i)
         return i
 
@@ -174,14 +175,12 @@ class booking_detail:
         self.screen_obj.assign_timeslot(timeslot_obj_2)
 
         self.timeslot_obj.display_timeslot()
-    
-
 
 class User:
-    def __init__(self, email, password,movie_title, screen_num,start_time,stop_time):
+    def __init__(self, email, password, movie_title, screen_num, start_time, stop_time):
         self.email = email
         self.password = password
-        self.booking_obj = booking_detail(movie_title, screen_num,start_time,stop_time)
+        self.booking_obj = booking_detail(movie_title, screen_num, start_time, stop_time)
 
     def login(self):
         while True:
@@ -194,13 +193,21 @@ class User:
             else:
                 print("Incorrect email or password. Please try again ")
 
+    def load(self, file_name):
+        with open(file_name, 'rb') as file:
+            self.booking_obj = pickle.load(file)
+
+    def dump(self, file_name):
+        with open(file_name, 'wb') as file:
+            pickle.dump(self.booking_obj, file)
+
 print("logging into admin account: ")
 email_input_1 = input("enter email to make account :")
 password_input_1 = input("enter password for this email : ")           
 
 start_time_1 = int(input("enter starting time of first timeslot: "))  
 stop_time_1 = int(input("enter stopping time of first timeslot : "))  
-admin_obj = Admin(email_input_1,password_input_1,"kitkat",2,start_time_1,stop_time_1)  
+admin_obj = Admin(email_input_1, password_input_1, "kitkat", 2, start_time_1, stop_time_1)  
 admin_obj.login()
 admin_obj.movie_list_change()
 admin_obj.seating_change()
@@ -214,7 +221,7 @@ password_input_2 = input("enter password for this email : ")
 
 start_time_2 = int(input("enter starting time of second timeslot: "))  
 stop_time_2 = int(input("enter stopping time of second timeslot : "))  
-admin_obj_2 = Admin(email_input_2,password_input_2,"kitkat",2,start_time_2,stop_time_2)   
+admin_obj_2 = Admin(email_input_2, password_input_2, "kitkat", 2, start_time_2, stop_time_2)   
 admin_obj_2.login()
 admin_obj_2.movie_list_change()
 admin_obj_2.seating_change()
@@ -225,7 +232,7 @@ admin_obj_2.removing_new_timeslot()
 print("now trying the user side: ")
 email_input_1 = input("enter email to make account :")
 password_input_1 = input("enter password for this email : ")           
-user_obj_1 = User(email_input_1,password_input_1,"guardian of space", 3, 1,1 )
+user_obj_1 = User(email_input_1, password_input_1, "guardian of space", 3, 1, 1)
 user_obj_1.login() 
 user_obj_1.booking_obj.generate_id()
 user_obj_1.booking_obj.seat_movie_select()
